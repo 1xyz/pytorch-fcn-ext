@@ -13,6 +13,7 @@ import torch
 from torch.autograd import Variable
 import torch.nn.functional as F
 import tqdm
+import imageio
 
 import torchfcn
 
@@ -134,7 +135,7 @@ class Trainer(object):
         if not osp.exists(out):
             os.makedirs(out)
         out_file = osp.join(out, 'iter%012d.jpg' % self.iteration)
-        scipy.misc.imsave(out_file, fcn.utils.get_tile_image(visualizations))
+        imageio.imsave(out_file, fcn.utils.get_tile_image(visualizations))
 
         val_loss /= len(self.val_loader)
 
