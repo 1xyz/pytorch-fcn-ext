@@ -3,5 +3,7 @@
 
 build/
 dist/
-.venv/
 venv/
+*venv/
+.idea/
+.ipynb_checkpoints/
