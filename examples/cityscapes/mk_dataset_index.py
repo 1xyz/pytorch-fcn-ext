@@ -8,6 +8,8 @@ Options:
   --output-folder=<if>  Output folder [default: ~/data/datasets].
 """
 
+#!/usr/bin/env python
+
 import os
 import os.path as osp
 from typing import Iterable, Iterator

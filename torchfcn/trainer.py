@@ -96,6 +96,7 @@ class Trainer(object):
         self.model.eval()
 
         n_class = len(self.val_loader.dataset.class_names)
+        print(n_class)
 
         val_loss = 0
         visualizations = []
@@ -124,10 +125,10 @@ class Trainer(object):
                 img, lt = self.val_loader.dataset.untransform(img, lt)
                 label_trues.append(lt)
                 label_preds.append(lp)
-                if len(visualizations) < 9:
-                    viz = fcn.utils.visualize_segmentation(
-                        lbl_pred=lp, lbl_true=lt, img=img, n_class=n_class)
-                    visualizations.append(viz)
+                # if len(visualizations) < 9:
+                #     viz = fcn.utils.visualize_segmentation(
+                #         lbl_pred=lp, lbl_true=lt, img=img, n_class=n_class)
+                #     visualizations.append(viz)
         metrics = torchfcn.utils.label_accuracy_score(
             label_trues, label_preds, n_class)
 
