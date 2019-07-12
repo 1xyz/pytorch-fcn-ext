@@ -9,39 +9,39 @@ from torch.utils import data
 
 class CityScape(data.Dataset):
     class_names = np.array([
-        'ego vehicle'
-        'rectification border'
-        'out of roi'
-        'static'
-        'dynamic'
-        'ground'
-        'road'
-        'sidewalk'
-        'parking'
-        'rail track'
-        'building'
-        'wall'
-        'fence'
-        'guard rail'
-        'bridge'
-        'tunnel'
-        'pole'
-        'polegroup'
-        'traffic light'
-        'traffic sign'
-        'vegetation'
-        'terrain'
-        'sky'
-        'person'
-        'rider'
-        'car'
-        'truck'
-        'bus'
-        'caravan'
-        'trailer'
-        'train'
-        'motorcycle'
-        'bicycle'
+        'ego vehicle',
+        'rectification border',
+        'out of roi',
+        'static',
+        'dynamic',
+        'ground',
+        'road',
+        'sidewalk',
+        'parking',
+        'rail track',
+        'building',
+        'wall',
+        'fence',
+        'guard rail',
+        'bridge',
+        'tunnel',
+        'pole',
+        'polegroup',
+        'traffic light',
+        'traffic sign',
+        'vegetation',
+        'terrain',
+        'sky',
+        'person',
+        'rider',
+        'car',
+        'truck',
+        'bus',
+        'caravan',
+        'trailer',
+        'train',
+        'motorcycle',
+        'bicycle',
         'license plate'
     ])
     mean_bgr = np.array([104.00698793, 116.66876762, 122.67891434])
@@ -55,7 +55,7 @@ class CityScape(data.Dataset):
         self.files = collections.defaultdict(list)
         for split in ['train', 'val']:
             imgsets_file = osp.join(
-                dataset_dir, 'Cityscapes_%s.txt' % split)
+                dataset_dir, 'CityScapes_%s.txt' % split)
             for did in open(imgsets_file):
                 did = did.strip()
                 city = did.partition('_')[0]
