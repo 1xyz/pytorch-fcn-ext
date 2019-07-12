@@ -1,5 +1,6 @@
 import collections
 import os.path as osp
+import sys
 
 import PIL.Image
 import numpy as np
@@ -77,13 +78,30 @@ class CityScape(data.Dataset):
         data_file = self.files[self.split][index]
         # load image
         img_file = data_file['img']
-        img = PIL.Image.open(img_file)
-        img = np.array(img, dtype=np.uint8)
+        with PIL.Image.open(img_file) as img:
+            try:
+                img = np.array(img, dtype=np.uint8)
+            except TypeError as te:
+                print(te)
+                t = type(img)
+                print(f"Current index {index} {img_file} type(image)={t}")
+                raise
+            except:
+                print("Unexpected error:", sys.exc_info()[0])
+                t = type(img)
+                print(f"Current index {index} {img_file} type(image)={t}")
+                raise
         # load label
         lbl_file = data_file['lbl']
-        lbl = PIL.Image.open(lbl_file)
-        lbl = np.array(lbl, dtype=np.int32)
-        lbl[lbl == 255] = -1
+        with PIL.Image.open(lbl_file) as lbl:
+            try:
+                lbl = np.array(lbl, dtype=np.int32)
+                lbl[lbl == 255] = -1
+            except:
+                print("Unexpected error:", sys.exc_info()[0])
+                t = type(img)
+                print(f"Current index {index} {img_file} type(image)={t}")
+                raise
         if self._transform:
             return self.transform(img, lbl)
         else:
