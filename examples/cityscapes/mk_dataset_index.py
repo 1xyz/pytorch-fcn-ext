@@ -10,8 +10,6 @@ Options:
 
 import os
 import os.path as osp
-from itertools import product
-from pathlib import Path
 from typing import Iterable, Iterator
 
 from docopt import docopt
@@ -23,15 +21,12 @@ def walk_files(root: str, *suffixes: Iterable[str]) -> Iterator[str]:
     Generate file by  Walk through the provided folder
 
     :param root:  A Root folder path
-    :param suffixes:  Extra folder arguments
     :return:  A generator of file paths
     """
-    prefix_len = len(root)
     root = osp.join(root, *suffixes)
-    for root, _, files in os.walk(root):
-        root_suffix = root[prefix_len:]
+    for _, _, files in os.walk(root):
         for f in files:
-            yield osp.join(root_suffix, f)
+            yield f
 
 
 def write_cs_index(input_root: str, output_root: str) -> None:
@@ -41,38 +36,21 @@ def write_cs_index(input_root: str, output_root: str) -> None:
     :param input_root: The root directory where the input cityscapes data is hosted
     :param output_root: The root directory where the data is posted
     """
-    output_root = osp.join(osp.expanduser(output_root), "Cityscapes", "Cityscapes")
-    cityscape_root = osp.join(osp.expanduser(input_root), "Cityscapes", "Cityscapes")
+    output_root = osp.join(osp.expanduser(output_root), "CityScapes", "CityScapes")
+    input_root = osp.join(osp.expanduser(input_root), "CityScapes", "CityScapes")
+    print(f"i: {input_root}, o: {output_root}")
 
-    print(tabulate([["Input_folder", f"{cityscape_root}"],
-                    ["Output_Folder", f"{output_root}"]], headers=["Arg", "Value"]))
-    print()
     file_counts = []
-    raw_file_prefix = "leftImg8bit"
     file_types = ["train", "test", "val"]
     for file_type in file_types:
-        key = f"Cityscapes_{raw_file_prefix}_{file_type}.txt"
-        cur_file_count = 0
-        file_name: str = osp.join(output_root, key)
+        n = 0
+        file_name: str = osp.join(output_root, f"CityScapes_{file_type}.txt")
         with open(file_name, "w") as f:
-            for name in walk_files(cityscape_root, raw_file_prefix, file_type):
-                f.write(f"{name}\n")
-                cur_file_count += 1
-        file_counts.append([key, cur_file_count])
-
-    label_file_prefix = "gtFine"
-    label_ids = ["color", "labelids"]
-    for file_type, label_id in product(file_types, label_ids):
-        key = f"Cityscapes_{label_file_prefix}_{file_type}_{label_id}.txt"
-        cur_file_count = 0
-        file_name: str = osp.join(output_root, key)
-        with open(file_name, "w") as f:
-            for name in walk_files(cityscape_root, label_file_prefix, file_type):
-                base_name: str = Path(name).stem
-                if base_name.lower().endswith(label_id):
-                    f.write(f"{name}\n")
-                    cur_file_count += 1
-        file_counts.append([key, cur_file_count])
+            for name in walk_files(input_root, "leftImg8bit", file_type):
+                # name looks like strasbourg_000001_058373_leftImg8bit.png
+                f.write(f"{name.rpartition('_')[0]}\n")
+                n += 1
+        file_counts.append([file_name, n])
 
     print(tabulate(file_counts, headers=["Dataset", "Count"]))
 
