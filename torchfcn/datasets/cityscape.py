@@ -79,15 +79,8 @@ class CityScape(data.Dataset):
         # load image
         img_file = data_file['img']
         with PIL.Image.open(img_file) as img:
-            t = type(img)
-            print(f"Img Current index {index} {img_file} type(image)={t}\n")
             try:
                 img = np.array(img, dtype=np.uint8)
-            except TypeError as te:
-                print(te)
-                t = type(img)
-                print(f"Current index {index} {img_file} type(image)={t}")
-                raise
             except:
                 print("Unexpected error:", sys.exc_info()[0])
                 t = type(img)
@@ -96,15 +89,13 @@ class CityScape(data.Dataset):
         # load label
         lbl_file = data_file['lbl']
         with PIL.Image.open(lbl_file) as lbl:
-            t = type(lbl)
-            print(f"Label Current index {index} {img_file} type(image)={t}\n")
             try:
                 lbl = np.array(lbl, dtype=np.int32)
                 lbl[lbl == 255] = -1
             except:
                 print("Unexpected error:", sys.exc_info()[0])
                 t = type(img)
-                print(f"Current index {index} {img_file} type(image)={t}")
+                print(f"Current index {index} {img_file} type(lbl)={t}")
                 raise
         if self._transform:
             return self.transform(img, lbl)

@@ -234,7 +234,7 @@ class Trainer(object):
         for epoch in tqdm.trange(self.epoch, max_epoch,
                                  desc='Train', ncols=80):
             self.epoch = epoch
-            self.loop_epoch()
-            # self.train_epoch()
+            # self.loop_epoch()
+            self.train_epoch()
             if self.iteration >= self.max_iter:
                 break
