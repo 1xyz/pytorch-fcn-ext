@@ -79,6 +79,8 @@ class CityScape(data.Dataset):
         # load image
         img_file = data_file['img']
         with PIL.Image.open(img_file) as img:
+            t = type(img)
+            print(f"Img Current index {index} {img_file} type(image)={t}\n")
             try:
                 img = np.array(img, dtype=np.uint8)
             except TypeError as te:
@@ -94,6 +96,8 @@ class CityScape(data.Dataset):
         # load label
         lbl_file = data_file['lbl']
         with PIL.Image.open(lbl_file) as lbl:
+            t = type(lbl)
+            print(f"Label Current index {index} {img_file} type(image)={t}\n")
             try:
                 lbl = np.array(lbl, dtype=np.int32)
                 lbl[lbl == 255] = -1
