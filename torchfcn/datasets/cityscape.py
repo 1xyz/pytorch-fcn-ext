@@ -5,6 +5,7 @@ import sys
 import PIL.Image
 import numpy as np
 import torch
+import torchvision.transforms
 from torch.utils import data
 
 
@@ -80,6 +81,7 @@ class CityScape(data.Dataset):
         img_file = data_file['img']
         with PIL.Image.open(img_file) as img:
             try:
+                img = torchvision.transforms.Resize([256, 512])(img)
                 img = np.array(img, dtype=np.uint8)
             except:
                 print("Unexpected error:", sys.exc_info()[0])
@@ -90,6 +92,7 @@ class CityScape(data.Dataset):
         lbl_file = data_file['lbl']
         with PIL.Image.open(lbl_file) as lbl:
             try:
+                lbl = torchvision.transforms.Resize([256, 512])(lbl)
                 lbl = np.array(lbl, dtype=np.int32)
                 lbl[lbl == 255] = -1
             except:
