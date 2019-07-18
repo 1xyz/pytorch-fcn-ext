@@ -118,15 +118,16 @@ def main():
         model = model.cuda()
 
     # 3. optimizer
-
-    optim = torch.optim.SGD(
+    
+    
+    optim = torch.optim.Adam(
         [
             {'params': get_parameters(model, bias=False)},
             {'params': get_parameters(model, bias=True),
              'lr': args.lr * 2, 'weight_decay': 0},
         ],
         lr=args.lr,
-        momentum=args.momentum,
+        #momentum=args.momentum,
         weight_decay=args.weight_decay)
     if args.resume:
         optim.load_state_dict(checkpoint['optim_state_dict'])

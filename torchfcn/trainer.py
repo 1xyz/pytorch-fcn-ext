@@ -35,11 +35,8 @@ def cross_entropy2d(input, target, weight=None, size_average=True):
     mask = target >= 0
     target = target[mask]
     loss = F.nll_loss(log_p, target, weight=weight, reduction='sum')
-    qprint(f"cross_entropy2d loss: {loss} target:{target} log_p: {log_p}\n")
     if size_average:
-        print(f"cross_entropy2d mask.data.sum(): {mask.data.sum()}\n")
         loss /= mask.data.sum()
-    print(f"cross_entropy2d loss post: {loss}\n")
     return loss
 
 
@@ -207,9 +204,9 @@ class Trainer(object):
             loss /= len(data)
             loss_data = loss.data.item()
             if np.isnan(loss_data):
-                print(f"Loss is {loss}")
+                # print(f"Loss is {loss}")
                 l = len(data)
-                print(f"data-length {l}")
+                # print(f"data-length {l}")
                 raise ValueError('loss is nan while training')
             loss.backward()
             self.optim.step()
