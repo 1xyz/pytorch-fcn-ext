@@ -139,9 +139,12 @@ class FCN32s(nn.Module):
         h = self.drop7(h)
 
         h = self.score_fr(h)
+        # print(f"after score_fr {h}\n")
 
         h = self.upscore(h)
+        # print(f"after upscore {h}\n")
         h = h[:, :, 19:19 + x.size()[2], 19:19 + x.size()[3]].contiguous()
+        # print(f"after crazy continios {h}\n")
 
         return h
 
