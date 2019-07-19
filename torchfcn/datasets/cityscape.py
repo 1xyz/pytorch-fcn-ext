@@ -49,13 +49,18 @@ class CityScape(data.Dataset):
     ])
     mean_bgr = np.array([104.00698793, 116.66876762, 122.67891434])
 
-    flip_types = [FlipType.Unknown, FlipType.Vertical, FlipType.Horizontal]
-    transform_types = [
+    train_flip_types = [FlipType.Unknown, FlipType.Vertical, FlipType.Horizontal]
+    train_transform_types = [
         ImageTransformType.CenterCrop,
-        ImageTransformType.BottomRightCrop,
-        ImageTransformType.BottomLeftCrop,
-        ImageTransformType.TopRightCrop,
-        ImageTransformType.TopLeftCrop,
+        # ImageTransformType.BottomRightCrop,
+        # ImageTransformType.BottomLeftCrop,
+        # ImageTransformType.TopRightCrop,
+        # ImageTransformType.TopLeftCrop,
+        ImageTransformType.Resize
+    ]
+
+    val_flip_types = [FlipType.Unknown]
+    val_transform_types = [
         ImageTransformType.Resize
     ]
 
@@ -82,14 +87,24 @@ class CityScape(data.Dataset):
                     dataset_dir,
                     "{0}/{1}/{2}/{3}_{0}_labelIds.png".format("gtFine", split, city, did))
 
-                for flip_type in self.flip_types:
-                    for transform_type in self.transform_types:
-                        self.files[split].append({
-                            'img': img_file,
-                            'lbl': lbl_file,
-                            'flip_type': flip_type,
-                            'transform_type': transform_type
-                        })
+                if split == 'train':
+                    for flip_type in self.train_flip_types:
+                        for transform_type in self.train_transform_types:
+                            self.files[split].append({
+                                'img': img_file,
+                                'lbl': lbl_file,
+                                'flip_type': flip_type,
+                                'transform_type': transform_type
+                            })
+                else:
+                    for flip_type in self.val_flip_types:
+                        for transform_type in self.val_transform_types:
+                            self.files[split].append({
+                                'img': img_file,
+                                'lbl': lbl_file,
+                                'flip_type': flip_type,
+                                'transform_type': transform_type
+                            })
 
     def __len__(self):
         return len(self.files[self.split])
