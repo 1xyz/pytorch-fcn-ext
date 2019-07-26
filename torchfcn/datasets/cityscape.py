@@ -52,10 +52,10 @@ class CityScape(data.Dataset):
     train_flip_types = [FlipType.Unknown, FlipType.Vertical, FlipType.Horizontal]
     train_transform_types = [
         ImageTransformType.CenterCrop,
-        # ImageTransformType.BottomRightCrop,
-        # ImageTransformType.BottomLeftCrop,
-        # ImageTransformType.TopRightCrop,
-        # ImageTransformType.TopLeftCrop,
+        ImageTransformType.BottomRightCrop,
+        ImageTransformType.BottomLeftCrop,
+        ImageTransformType.TopRightCrop,
+        ImageTransformType.TopLeftCrop,
         ImageTransformType.Resize
     ]
 
