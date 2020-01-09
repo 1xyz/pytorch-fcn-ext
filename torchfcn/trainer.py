@@ -1,19 +1,18 @@
 import datetime
-from distutils.version import LooseVersion
 import math
 import os
 import os.path as osp
 import shutil
+from distutils.version import LooseVersion
 
 import fcn
+import imageio
 import numpy as np
 import pytz
-import scipy.misc
 import torch
-from torch.autograd import Variable
 import torch.nn.functional as F
 import tqdm
-import imageio
+from torch.autograd import Variable
 
 import torchfcn
 
@@ -141,8 +140,8 @@ class Trainer(object):
 
         with open(osp.join(self.out, 'log.csv'), 'a') as f:
             elapsed_time = (
-                datetime.datetime.now(pytz.timezone('Asia/Tokyo')) -
-                self.timestamp_start).total_seconds()
+                    datetime.datetime.now(pytz.timezone('Asia/Tokyo')) -
+                    self.timestamp_start).total_seconds()
             log = [self.epoch, self.iteration] + [''] * 5 + \
                   [val_loss] + list(metrics) + [elapsed_time]
             log = map(str, log)
@@ -166,6 +165,15 @@ class Trainer(object):
 
         if training:
             self.model.train()
+
+    def loop_epoch(self):
+        n_class = len(self.train_loader.dataset.class_names)
+        for batch_idx, (data, target) in tqdm.tqdm(
+                enumerate(self.train_loader), total=len(self.train_loader),
+                desc='Train epoch=%d' % self.epoch, ncols=80, leave=False):
+            data, target = Variable(data), Variable(target)
+            print(type(data))
+            print(type(target))
 
     def train_epoch(self):
         self.model.train()
@@ -196,6 +204,9 @@ class Trainer(object):
             loss /= len(data)
             loss_data = loss.data.item()
             if np.isnan(loss_data):
+                # print(f"Loss is {loss}")
+                l = len(data)
+                # print(f"data-length {l}")
                 raise ValueError('loss is nan while training')
             loss.backward()
             self.optim.step()
@@ -211,10 +222,10 @@ class Trainer(object):
 
             with open(osp.join(self.out, 'log.csv'), 'a') as f:
                 elapsed_time = (
-                    datetime.datetime.now(pytz.timezone('Asia/Tokyo')) -
-                    self.timestamp_start).total_seconds()
+                        datetime.datetime.now(pytz.timezone('Asia/Tokyo')) -
+                        self.timestamp_start).total_seconds()
                 log = [self.epoch, self.iteration] + [loss_data] + \
-                    metrics.tolist() + [''] * 5 + [elapsed_time]
+                      metrics.tolist() + [''] * 5 + [elapsed_time]
                 log = map(str, log)
                 f.write(','.join(log) + '\n')
 
@@ -226,6 +237,7 @@ class Trainer(object):
         for epoch in tqdm.trange(self.epoch, max_epoch,
                                  desc='Train', ncols=80):
             self.epoch = epoch
+            # self.loop_epoch()
             self.train_epoch()
             if self.iteration >= self.max_iter:
                 break
